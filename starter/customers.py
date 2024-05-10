@@ -7,3 +7,4 @@ customers = {
 
 def get_by_username(username):
     return customers.get(username)
+

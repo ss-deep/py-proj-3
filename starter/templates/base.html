@@ -25,10 +25,11 @@
   <div class="container">
 
     <!-- This is where the main content goes. -->
-    {% block body %}
     {% for message in get_flashed_messages() %}
-        <p class="alert alert-warning">{{message}}</p>
+    <p class="alert alert-warning">{{message}}</p>
     {%endfor%}
+
+    {% block content %}
     {% endblock %}
 
   </div>

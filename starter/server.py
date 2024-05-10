@@ -1,6 +1,8 @@
-from flask import Flask, render_template, redirect, flash, Request, session
+from flask import Flask, render_template, redirect, flash, request, session,url_for
 import jinja2
 from melons import all_melons,find_melon
+from forms import LoginForm
+import customers
 
 app=Flask(__name__)
 app.jinja_env.undefined = jinja2.StrictUndefined  # for debugging purposes
@@ -10,6 +12,23 @@ app.secret_key = 'dev'
 @app.route('/')
 def homepage():
    return render_template("base.html")
+
+@app.route("/login", methods=['GET','POST'])
+def login():
+   username=""
+   form=LoginForm(request.form)
+   if form.validate_on_submit():
+      username=form.username.data
+      password=form.password.data
+      form.username.data=''
+      customer=customers.get_by_username(username)
+      if customer and customer['password']==password:
+         session['name']=username
+         flash('Logged In')
+         return redirect(url_for('get_all_melons'))
+      else:
+         flash('Invalid username or password')
+   return render_template('login.html', form=form)
 
 @app.route('/all-melons')
 def get_all_melons():
