@@ -23,13 +23,20 @@ def login():
       form.username.data=''
       customer=customers.get_by_username(username)
       if customer and customer['password']==password:
-         session['name']=username
+         session['username']=username
          flash('Logged In')
-         return redirect(url_for('get_all_melons'))
+         return redirect('/all-melons')
       else:
          flash('Invalid username or password')
    return render_template('login.html', form=form)
 
+@app.route('/logout')
+def logout():
+   del session['username']
+   session['cart']={}
+   flash('Sucessfully logged out.')
+   return redirect('/login')
+                   
 @app.route('/all-melons')
 def get_all_melons():
    melon_list=all_melons()
@@ -46,14 +53,18 @@ def add_to_cart(melon_id):
       session['cart']={}
    cart = session['cart']  
    cart[melon_id] = cart.get(melon_id, 0) + 1
-
    session.modified=True
+
+   if 'username' not in session:
+      return redirect('/login')
    flash(f"Melon {melon_id} successfully added to cart.")
-   print(cart)
+   # print(cart)
    return redirect("/cart")
 
 @app.route('/cart')
 def cart():
+   if 'username' not in session:
+      return redirect('/login')
    order_total = 0
    melons_list = []
 
@@ -67,13 +78,17 @@ def cart():
       melon.total_cost=qty*melon.price
       melons_list.append(melon)
 
-      print(session['cart'])
+      # print(session['cart'])
    return render_template("cart.html",melons_list=melons_list,order_total=order_total)
 
 @app.route("/empty-cart")
 def empty_cart():
    session['cart']={}
    return redirect('/cart')
+
+@app.errorhandler(404)
+def error_404(e):
+   return render_template('404.html')
 
 if __name__ == "__main__":
    app.env = "development"

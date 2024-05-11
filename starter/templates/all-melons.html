@@ -1,17 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id="melon-list">
+<div id="melon-list" class="mx-5">
     {% for melon in melon_list %}
-       <div class="card text-center p-2 m-2">
-          <img class="melon-image" src="{{ melon.image_url }}">
-          <h5>
-          <a href="{{ url_for('melon_details', melon_id=melon.melon_id) }}">
+       <div class="card text-center m-2">
+        <div div class="card-body">
+          <img class="melon-image card-img-top" src="{{ melon.image_url }}">
+          <h5 class="card-title"> 
+            <a href="{{ url_for('melon_details', melon_id=melon.melon_id) }}">
              {{ melon.common_name }}
-          </a>
-          </h5>
-          {{ melon.price_str() }}
+            </a>
+          </h5 >
+          <p class="card-text">{{ melon.price_str() }}</p>
        </div>
+    </div>
     {% endfor %}
 </div>
 {% endblock %}
