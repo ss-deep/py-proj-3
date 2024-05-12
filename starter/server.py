@@ -63,6 +63,8 @@ def add_to_cart(melon_id):
 
 @app.route('/cart')
 def cart():
+   print(f"session in cart at start: {session}")
+
    if 'username' not in session:
       return redirect('/login')
    order_total = 0
@@ -77,9 +79,21 @@ def cart():
       melon.quantity=qty
       melon.total_cost=qty*melon.price
       melons_list.append(melon)
-
       # print(session['cart'])
+   print(f"session in cart end: {session}")
    return render_template("cart.html",melons_list=melons_list,order_total=order_total)
+
+@app.route("/remove_melon/<melon_id>")
+def remove_melon(melon_id):
+   print(melon_id)
+   # cart=session['cart']
+   session.modified=True
+   if session['cart'][melon_id]>1:
+      session['cart'][melon_id]-=1
+   else:
+      session['cart'].pop(melon_id)
+   # print(f"session in remove : {session}")
+   return redirect('/cart')
 
 @app.route("/empty-cart")
 def empty_cart():

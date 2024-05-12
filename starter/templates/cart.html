@@ -20,7 +20,8 @@
                 <td>{{melon.quantity}}</td>
                 <td>${{ "%0.2f" | format(melon.price) }}</td>
                 <td>${{ "%0.2f" | format(melon.total_cost) }}</td>
-                <!-- <td><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></td> -->
+                <td><a type="button" class="btn-close" href="{{ url_for('remove_melon', melon_id=melon.melon_id) }}"></a></td>
+                <!-- <a class="btn btn-primary" href="{{ url_for('add_to_cart', melon_id=melon.melon_id) }}">Add to Cart</a> -->
             </tr>
             {%endfor%}
         </table>
